@@ -18,6 +18,8 @@ const reducer = (state, payload) => {
             return {...state, isSignedIn, token};
         case 'e':
             return {...state, error};
+        case 'clear_err':
+            return {...state, error: ''}
         default:
             return state;
     }
@@ -36,20 +38,17 @@ const signup = dispatch => async (email, password) => {
         dispatch(payload);
         navigate('TrackList');
     } catch (err) {
-        console.log(err)
         const payload = {
             type: 'e',
             error: err.message
         };
         dispatch(payload);
     }
-
 };
 
 const signin = (dispatch) => async (email, password) => {
     try {
         const response = await api.post('/signin', {email, password});
-        console.log('response', response)
         const token = (response.data) ? response.data.token : null;
         await AsyncStorage.setItem('token', response.data.token);
         const payload = {
@@ -64,13 +63,32 @@ const signin = (dispatch) => async (email, password) => {
             type: 'e',
             error: err.message
         };
-        console.log(err);
         dispatch(payload);
     }
 };
 
+const clearError = (dispatch) => async () => {
+    dispatch({type: 'clear_err'});
+};
+
+const tryLocalSignin = (dispatch) => async () => {
+    const token = await AsyncStorage.getItem('token');
+    const payload = {
+        type: 'signin',
+        token,
+        // isSignedIn: true
+    };
+    console.log(token);
+    if (token) {
+        dispatch(payload);
+        navigate('TrackList');
+    } else {
+        navigate('loginFlow');
+    }
+}
+
 
 //
-const actions = {signin, signup};
+const actions = {signin, signup, clearError, tryLocalSignin};
 export default Context(reducer, actions, initState);
 
