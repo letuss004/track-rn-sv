@@ -1,46 +1,76 @@
 import Context from './Context';
 import api from '../api/api'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {navigate} from "../navigationRef";
 
-
-//
-const initState = {};
-const reducer = async (state, payload) => {
-    const {type, email, password} = payload;
+// var
+const initState = {
+    isSignedIn: false,
+    error: '',
+    token: ''
+};
+const reducer = (state, payload) => {
+    const {type, isSignedIn, error, token} = payload;
 
     switch (type) {
         case 'signin':
-            console.log(email, password)
-            try {
-                const response = await api.post('/auth/signin', {email, password})
-                const token = response.token;
-                console.log(token)
-                return [...state, token]
-            } catch (err) {
-                console.log(err.message)
-                return state;
-            }
+        case 'signup':
+            return {...state, isSignedIn, token};
+        case 'e':
+            return {...state, error};
         default:
             return state;
     }
 }
 
-//
-const signup = () => {
-
-};
-
-const signin = (dispatch, email, password) => {
-    console.log('Signin dispatch',email, password)
-    const payload = {
-        type: 'signin',
-        email,
-        password,
+// action
+const signup = dispatch => async (email, password) => {
+    try {
+        const response = await api.post('/signup', {email, password});
+        await AsyncStorage.setItem('token', response.data.token);
+        const payload = {
+            type: 'signup',
+            isSignedIn: true,
+            token: response.data.token
+        };
+        dispatch(payload);
+        navigate('TrackList');
+    } catch (err) {
+        console.log(err)
+        const payload = {
+            type: 'e',
+            error: err.message
+        };
+        dispatch(payload);
     }
-    return dispatch(payload);
+
+};
+
+const signin = (dispatch) => async (email, password) => {
+    try {
+        const response = await api.post('/signin', {email, password});
+        console.log('response', response)
+        const token = (response.data) ? response.data.token : null;
+        await AsyncStorage.setItem('token', response.data.token);
+        const payload = {
+            type: 'signin',
+            isSignedIn: true,
+            token
+        };
+        dispatch(payload);
+        navigate('TrackList');
+    } catch (err) {
+        const payload = {
+            type: 'e',
+            error: err.message
+        };
+        console.log(err);
+        dispatch(payload);
+    }
 };
 
 
 //
-const actions = {signin};
+const actions = {signin, signup};
 export default Context(reducer, actions, initState);
 

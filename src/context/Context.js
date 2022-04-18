@@ -9,7 +9,7 @@ const createContext = (reducer, actions, initState) => {
         const [state, dispatch] = useReducer(reducer, initState);
         const dispatcher = {};
         for (let key in actions) {
-            dispatcher[key] = (email, password) => actions[key](dispatch, email, password);
+            dispatcher[key] = actions[key](dispatch);
         }
 
         return <Context.Provider value={{state, ...dispatcher}}>

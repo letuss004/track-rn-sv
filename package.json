@@ -12,6 +12,7 @@
     "dev": "concurrently \"expo start\" \"npm run server\" "
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "axios": "^0.26.1",
@@ -33,6 +34,5 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
-  },
-  "private": true
+  }
 }

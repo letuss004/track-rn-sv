@@ -15,8 +15,8 @@ mongoose.connect(mongoUri).then(
 );
 
 // routers
-app.use('/auth', require('./src/routes/auth'))
-app.use('/api', require('./src/routes/track'))
+app.use('/', require('./src/routes/auth'))
+app.use('/', require('./src/routes/track'))
 
 
 // Listen connections

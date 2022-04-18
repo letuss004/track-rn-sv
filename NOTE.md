@@ -1,0 +1,1 @@
+# the mission of action in each actions on AuthContext, ... is return a pattern for appContext process and complete.
