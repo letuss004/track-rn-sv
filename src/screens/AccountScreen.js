@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {Button, Text, View} from 'react-native';
-import {SafeAreaView} from "react-navigation";
+import {SafeAreaView} from "react-native-safe-area-context";
 import AuthContext from "../context/AuthContext";
 
 const AccountScreen = props => {

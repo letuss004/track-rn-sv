@@ -25,7 +25,7 @@ const reducer = (state, payload) => {
         default:
             return state;
     }
-}
+};
 
 // action
 const signup = dispatch => async (email, password) => {
