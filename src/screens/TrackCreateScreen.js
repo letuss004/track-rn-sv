@@ -1,44 +1,24 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useContext} from 'react';
 import {Text} from 'react-native-elements';
+import {withNavigationFocus} from "react-navigation";
 import {SafeAreaView} from "react-native-safe-area-context";
-import {requestForegroundPermissionsAsync, watchPositionAsync, Accuracy} from 'expo-location';
 import LocationContext from "../context/LocationContext";
 import Map from "./Map";
 import '../_mockLocation';
+import useLocation from "../hooks/useLocation";
+import TrackForm from "../components/TrackForm";
 
 const TrackCreateScreen = props => {
-    const [error, setError] = useState(null);
-    const {state, addLocation} = useContext(LocationContext.Context);
-
-    const startWatching = async () => {
-        try {
-            const {granted} = await requestForegroundPermissionsAsync();
-            if (!granted) setError('Please enable ur location');
-            await watchPositionAsync({
-                accuracy: Accuracy.BestForNavigation,
-                timeInterval: 1000,
-                distanceInterval: 10
-            }, (location) => {
-                console.log(location);
-                addLocation(location)
-            });
-        } catch (err) {
-            setError(err.message)
-        }
-    };
-
-    useEffect(() => {
-        startWatching()
-    }, []);
-
-    return <View>
-        <SafeAreaView forceInset={{top: 'always'}}>
-            <Text h3>Create a Track</Text>
-            <Map currentLocation={state.currentLocation}/>
-            {error ? <Text>{error}</Text> : null}
-        </SafeAreaView>
-    </View>
+    const {isFocused} = props;
+    const {addLocation} = useContext(LocationContext.Context);
+    const [error] = useLocation(isFocused, addLocation);
+    console.log('isFocused', isFocused);
+    return <SafeAreaView forceInset={{top: 'always'}}>
+        <Text h3>Create a Track</Text>
+        <Map/>
+        {error ? <Text>{error}</Text> : null}
+        <TrackForm/>
+    </SafeAreaView>
 };
 
-export default TrackCreateScreen;
+export default withNavigationFocus(TrackCreateScreen);
