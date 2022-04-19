@@ -1,13 +1,13 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import AuthContext from "../context/AuthContext";
+import {NavigationEvents} from "react-navigation";
 import Link from "../components/Link";
 import AuthForm from "../components/AuthForm";
-import {NavigationEvents} from "react-navigation";
 
 
 const SignupScreen = props => {
     const {navigation} = props;
-    const {state, signup, clearError, tryLocalSignin} = useContext(AuthContext.Context);
+    const {state, signup, clearError} = useContext(AuthContext.Context);
     const link = () => (
         <Link
             text={"Already have an account? Login here."}

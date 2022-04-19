@@ -6,8 +6,8 @@ import {navigate} from "../navigationRef";
 // var
 const initState = {
     isSignedIn: false,
-    error: '',
-    token: ''
+    error: null,
+    token: null
 };
 const reducer = (state, payload) => {
     const {type, isSignedIn, error, token} = payload;
@@ -20,6 +20,8 @@ const reducer = (state, payload) => {
             return {...state, error};
         case 'clear_err':
             return {...state, error: ''}
+        case 'signout':
+            return {...initState};
         default:
             return state;
     }
@@ -85,10 +87,16 @@ const tryLocalSignin = (dispatch) => async () => {
     } else {
         navigate('loginFlow');
     }
-}
+};
+
+const signout = (dispatch) => async () => {
+    await AsyncStorage.removeItem('token');
+    dispatch({type: 'signout'});
+    navigate('loginFlow')
+};
 
 
 //
-const actions = {signin, signup, clearError, tryLocalSignin};
+const actions = {signin, signup, clearError, signout, tryLocalSignin};
 export default Context(reducer, actions, initState);
 
