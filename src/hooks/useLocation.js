@@ -5,6 +5,7 @@ export default (shouldTrack, callback) => {
     const [error, setError] = useState(null);
     const [subscriber, setSubscriber] = useState(null);
     const startWatching = async () => {
+        console.log('watching')
         try {
             const {granted} = await requestForegroundPermissionsAsync();
             if (!granted)
@@ -26,7 +27,6 @@ export default (shouldTrack, callback) => {
 
     useEffect(() => {
         if (shouldTrack) {
-            console.log('watching')
             startWatching()
         } else {
             console.log('not watching')
