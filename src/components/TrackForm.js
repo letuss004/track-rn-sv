@@ -7,7 +7,7 @@ import Spacer from "./Spacer";
 const TrackForm = () => {
     const {state, startRecording, stopRecording, changeName} = useContext(LocationContext.Context);
     const {name, recording, locations} = state;
-    console.log(locations)
+    console.log('Track form locations length:', locations.length);
 
     return <>
         <Spacer>

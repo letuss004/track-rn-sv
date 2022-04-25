@@ -1,16 +1,15 @@
 import {useEffect, useState} from 'react'
 import {Accuracy, requestForegroundPermissionsAsync, watchPositionAsync} from 'expo-location';
 
+
 export default (shouldTrack, callback) => {
     const [error, setError] = useState(null);
     const [subscriber, setSubscriber] = useState(null);
     const startWatching = async () => {
-        console.log('watching')
+        console.log('watching');
         try {
             const {granted} = await requestForegroundPermissionsAsync();
-            if (!granted)
-                setError('Please enable ur location');
-
+            if (!granted) setError('Please enable ur location');
             const subscriber = await watchPositionAsync(
                 {
                     accuracy: Accuracy.BestForNavigation,
@@ -25,15 +24,15 @@ export default (shouldTrack, callback) => {
         }
     };
 
-    useEffect(() => {
+    useEffect(() => { // shouldTrack = isFocused
         if (shouldTrack) {
-            startWatching()
+            console.log('useEffect')
+            startWatching();
         } else {
-            console.log('not watching')
+            console.log('not watching');
             subscriber.remove();
             setSubscriber(null);
         }
     }, [shouldTrack]);
-
     return [error];
 }
